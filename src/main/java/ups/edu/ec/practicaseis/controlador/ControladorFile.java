@@ -1,7 +1,6 @@
 package ups.edu.ec.practicaseis.controlador;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -33,7 +32,14 @@ public class ControladorFile {
         }
         return false;
     }
-
+    
+    public void renombarArchivo(File file, String nuevoNombre) {
+        if (file.exists()) {
+            File fileRenombreado = new File(file.getParent() + nuevoNombre);
+            file.renameTo(fileRenombreado);
+        }
+    }
+    
     public boolean elminarFile(File fileElminar) {
         if (fileElminar.exists()) {
             if (fileElminar.isDirectory()) {
@@ -58,53 +64,58 @@ public class ControladorFile {
                         modelo.addElement(direcotorio.getAbsolutePath());
                     }
                     listaFile.setModel(modelo);
+                } else {
+                    listaFile.setModel(modelo);
                 }
-                listaFile.setModel(modelo);
 
             }
             case "ListarOcultosYDirectorio" -> {
                 if (file.exists()) {
                     for (File directorioOcultos : file.listFiles()) {
                         if (directorioOcultos.isHidden() && directorioOcultos.isDirectory()) {
-                            modelo.addElement(caso);
+                            modelo.addElement(directorioOcultos.getAbsolutePath());
                         }
                         listaFile.setModel(modelo);
                     }
+                } else {
+                    listaFile.setModel(modelo);
                 }
-                listaFile.setModel(modelo);
             }
             case "ListarNormalesDirectorio" -> {
                 if (file.exists()) {
                     for (File fileNormal : file.listFiles()) {
                         if (!fileNormal.isHidden() && fileNormal.isDirectory()) {
-                            modelo.addElement(caso);
+                            modelo.addElement(fileNormal.getAbsolutePath());
                         }
                         listaFile.setModel(modelo);
                     }
+                } else {
+                    listaFile.setModel(modelo);
                 }
-                listaFile.setModel(modelo);
             }
             case "ListarOcultosYArchivos" -> {
                 if (file.exists()) {
                     for (File directorioOcultos : file.listFiles()) {
                         if (directorioOcultos.isHidden() && directorioOcultos.isFile()) {
-                            modelo.addElement(caso);
+                            modelo.addElement(directorioOcultos.getAbsolutePath());
                         }
                         listaFile.setModel(modelo);
                     }
+                } else {
+                    listaFile.setModel(modelo);
                 }
-                listaFile.setModel(modelo);
             }
             case "ListarNormalesYArchivos" -> {
                 if (file.exists()) {
                     for (File fileNormal : file.listFiles()) {
                         if (!fileNormal.isHidden() && fileNormal.isFile()) {
-                            modelo.addElement(caso);
+                            modelo.addElement(fileNormal.getAbsolutePath());
                         }
                         listaFile.setModel(modelo);
                     }
+                } else {
+                    listaFile.setModel(modelo);
                 }
-                listaFile.setModel(modelo);
             }
         }
 
