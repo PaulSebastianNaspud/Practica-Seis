@@ -71,6 +71,11 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
 
         jList.setBackground(new java.awt.Color(255, 255, 255));
         jList.setForeground(new java.awt.Color(0, 0, 0));
+        jList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jListValueChanged(evt);
+            }
+        });
         jScrollPane2.setViewportView(jList);
 
         txtFile.setBackground(new java.awt.Color(255, 255, 255));
@@ -232,6 +237,11 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
 
         jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/elminarD.png"))); // NOI18N
         jMenuItem2.setText("Elimniar");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem2);
         jMenu1.add(jSeparator3);
 
@@ -314,6 +324,29 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
         controladorFile.listar(jList, file, "ListarOcultosYDirectorio");
         jTextArea1.setText("");
     }//GEN-LAST:event_btbListarDirectorioOcultosActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        String file = JOptionPane.showInputDialog(this, "Ingrese el nombre del directorio/archivo a eliminar del directorio/archivo: ", this.seleccionarArchivo());
+        File fileEliminar = new File(file);
+        if(file != null && fileEliminar.exists()){
+            int respuesta = JOptionPane.showConfirmDialog(this, "¿Quieres elimar el directorio/archivo: " + fileEliminar.getName() + "?");
+            if (respuesta == JOptionPane.YES_OPTION) {
+                if (controladorFile.elminarFile(fileEliminar)) {
+                    JOptionPane.showMessageDialog(this, "El directorio/archivo: " + fileEliminar.getName() + " a sido eliminado");
+                }
+            }else {
+                    JOptionPane.showMessageDialog(this, "El directorio/archivo: " + fileEliminar.getName() + "  no se a sido eliminado");
+                }
+        } else {
+            JOptionPane.showMessageDialog(this, "El directorio/archivo: " + fileEliminar.getName() + "  no se a localizado");
+        }
+        
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListValueChanged
+        String file = jList.getSelectedValue();
+        controladorFile.mostrar(jTextArea1, file);
+    }//GEN-LAST:event_jListValueChanged
 
     private String seleccionarArchivo(){
         if(jList.getSelectedValue() != null){

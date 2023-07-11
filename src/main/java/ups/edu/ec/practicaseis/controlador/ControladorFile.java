@@ -24,20 +24,18 @@ public class ControladorFile {
                 } else {
                     File fileDirectorio = new File(file.getParent());
                     if (!fileDirectorio.exists()) {
-                        file.mkdir();
-                    }
-                    return file.mkdir();
+                        fileDirectorio.mkdir();
+                    } return file.mkdir();
                 }
             }
-        }
-        return false;
+        } return false;
     }
     
-    public void renombarArchivo(File file, String nuevoNombre) {
+    public boolean renombarArchivo(File file, String nuevoNombre) {
         if (file.exists()) {
             File fileRenombreado = new File(file.getParent() + nuevoNombre);
-            file.renameTo(fileRenombreado);
-        }
+            return file.renameTo(fileRenombreado);
+        } return false;
     }
     
     public boolean elminarFile(File fileElminar) {
@@ -48,11 +46,9 @@ public class ControladorFile {
                     for (File archivo : listaFile) {
                         this.elminarFile(archivo);
                     }
-                }
-                return fileElminar.delete();
-            }
-        }
-        return false;
+                } 
+            } return fileElminar.delete();
+        } return false;
     }
 
     public void listar(JList<String> listaFile, File file, String caso) {
