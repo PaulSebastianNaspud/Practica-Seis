@@ -275,8 +275,10 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnMostrarInformarcionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarInformarcionActionPerformed
-        String file = jList.getSelectedValue();
-        controladorFile.mostrar(jTextArea1, file);
+        String rutaFlle = jList.getSelectedValue();
+        File file = new File(rutaFlle);
+        controladorFile.listar(jList, file, "ListarTodos");
+        jTextArea1.setText("");
     }//GEN-LAST:event_btnMostrarInformarcionActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed

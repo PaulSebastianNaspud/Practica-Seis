@@ -32,7 +32,7 @@ public class ControladorFile {
     }
     
     public boolean renombarArchivo(File file, String nuevoNombre) {
-        if (file.exists()) {
+        if (file.exists() && file != null) {
             File fileRenombreado = new File(file.getParent() + nuevoNombre);
             return file.renameTo(fileRenombreado);
         } return false;
