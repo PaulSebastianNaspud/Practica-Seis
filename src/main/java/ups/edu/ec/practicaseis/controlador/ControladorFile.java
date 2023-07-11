@@ -16,30 +16,22 @@ import javax.swing.JTextArea;
  */
 public class ControladorFile {
 
-    public ControladorFile() {
-    }
-
-    public boolean crearFileCarpeta(String rutaDirectorio) {
-        try {
-            File directorio = new File(rutaDirectorio);
-            if (!directorio.exists()) {
-                return directorio.mkdir();
+    public boolean crearFile(String filePath) {
+        if (filePath != null) {
+            File file = new File(filePath);
+            if (!file.exists()) {
+                if (file.isDirectory()) {
+                    file.mkdir();
+                } else {
+                    File fileDirectorio = new File(file.getParent());
+                    if (!fileDirectorio.exists()) {
+                        file.mkdir();
+                    }
+                    return file.mkdir();
+                }
             }
-        } catch (NullPointerException nullPointerException) {
-        }return false;
-    }
-
-    public boolean crearFileArchivo(String rutaDirectorio, String nombreArichivo) {
-        File directorio = new File(rutaDirectorio);
-        try {
-            if (!directorio.exists()) {
-                directorio.mkdir();
-            }
-            File archivoExtencion = new File(rutaDirectorio, nombreArichivo);
-            return archivoExtencion.createNewFile();
-        } catch (IOException ex) {
-            return false;
         }
+        return false;
     }
 
     public boolean elminarFile(File fileElminar) {
@@ -57,16 +49,65 @@ public class ControladorFile {
         return false;
     }
 
-    public void listar(JList<String> listaFile, File file) {
+    public void listar(JList<String> listaFile, File file, String caso) {
         DefaultListModel<String> modelo = new DefaultListModel<>();
-        if (file.exists()) {
-            for (File direcotorio : file.listFiles()) {
-                modelo.addElement(direcotorio.getAbsolutePath());
+        switch (caso) {
+            case "ListarTodos" -> {
+                if (file.exists()) {
+                    for (File direcotorio : file.listFiles()) {
+                        modelo.addElement(direcotorio.getAbsolutePath());
+                    }
+                    listaFile.setModel(modelo);
+                }
+                listaFile.setModel(modelo);
+
             }
-            listaFile.setModel(modelo);
-        } else {
-            listaFile.setModel(modelo);
+            case "ListarOcultosYDirectorio" -> {
+                if (file.exists()) {
+                    for (File directorioOcultos : file.listFiles()) {
+                        if (directorioOcultos.isHidden() && directorioOcultos.isDirectory()) {
+                            modelo.addElement(caso);
+                        }
+                        listaFile.setModel(modelo);
+                    }
+                }
+                listaFile.setModel(modelo);
+            }
+            case "ListarNormalesDirectorio" -> {
+                if (file.exists()) {
+                    for (File fileNormal : file.listFiles()) {
+                        if (!fileNormal.isHidden() && fileNormal.isDirectory()) {
+                            modelo.addElement(caso);
+                        }
+                        listaFile.setModel(modelo);
+                    }
+                }
+                listaFile.setModel(modelo);
+            }
+            case "ListarOcultosYArchivos" -> {
+                if (file.exists()) {
+                    for (File directorioOcultos : file.listFiles()) {
+                        if (directorioOcultos.isHidden() && directorioOcultos.isFile()) {
+                            modelo.addElement(caso);
+                        }
+                        listaFile.setModel(modelo);
+                    }
+                }
+                listaFile.setModel(modelo);
+            }
+            case "ListarNormalesYArchivos" -> {
+                if (file.exists()) {
+                    for (File fileNormal : file.listFiles()) {
+                        if (!fileNormal.isHidden() && fileNormal.isFile()) {
+                            modelo.addElement(caso);
+                        }
+                        listaFile.setModel(modelo);
+                    }
+                }
+                listaFile.setModel(modelo);
+            }
         }
+
     }
 
     public void mostrar(JTextArea jTextArea, String file) {
@@ -99,5 +140,4 @@ public class ControladorFile {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return dateFormat.format(date);
     }
-
 }

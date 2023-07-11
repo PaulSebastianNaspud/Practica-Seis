@@ -40,6 +40,7 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
         btnMostrarInformarcion = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         btnBuscar = new javax.swing.JButton();
+        btbListarArchivos = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
@@ -80,14 +81,29 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
         btbListarDirectorios.setBackground(new java.awt.Color(204, 204, 204));
         btbListarDirectorios.setForeground(new java.awt.Color(0, 0, 0));
         btbListarDirectorios.setText("Listar Directorios");
+        btbListarDirectorios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btbListarDirectoriosActionPerformed(evt);
+            }
+        });
 
         btbListarArchivosOcultos.setBackground(new java.awt.Color(204, 204, 204));
         btbListarArchivosOcultos.setForeground(new java.awt.Color(0, 0, 0));
         btbListarArchivosOcultos.setText("Litar Archivos Ocultos");
+        btbListarArchivosOcultos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btbListarArchivosOcultosActionPerformed(evt);
+            }
+        });
 
         btbListarDirectorioOcultos.setBackground(new java.awt.Color(204, 204, 204));
         btbListarDirectorioOcultos.setForeground(new java.awt.Color(0, 0, 0));
         btbListarDirectorioOcultos.setText("Listar Directorios Ocultos");
+        btbListarDirectorioOcultos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btbListarDirectorioOcultosActionPerformed(evt);
+            }
+        });
 
         btnMostrarInformarcion.setBackground(new java.awt.Color(204, 204, 204));
         btnMostrarInformarcion.setForeground(new java.awt.Color(0, 0, 0));
@@ -110,6 +126,15 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
             }
         });
 
+        btbListarArchivos.setBackground(new java.awt.Color(204, 204, 204));
+        btbListarArchivos.setForeground(new java.awt.Color(0, 0, 0));
+        btbListarArchivos.setText("Listar Archivos");
+        btbListarArchivos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btbListarArchivosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -124,9 +149,11 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
                         .addGap(20, 20, 20)
                         .addComponent(btnBuscar))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(513, 513, 513)
+                        .addGap(381, 381, 381)
                         .addComponent(btbListarDirectorios)
                         .addGap(18, 18, 18)
+                        .addComponent(btbListarArchivos)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btbListarArchivosOcultos)
                         .addGap(18, 18, 18)
                         .addComponent(btbListarDirectorioOcultos))
@@ -152,8 +179,10 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
                     .addComponent(btnBuscar))
                 .addGap(31, 31, 31)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btbListarDirectorios)
-                    .addComponent(btbListarArchivosOcultos)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btbListarArchivosOcultos)
+                        .addComponent(btbListarDirectorios)
+                        .addComponent(btbListarArchivos))
                     .addComponent(btbListarDirectorioOcultos))
                 .addGap(38, 38, 38)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -231,7 +260,7 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         String rutaFlle = txtFile.getText();
         File file = new File(rutaFlle);
-        controladorFile.listar(jList, file);
+        controladorFile.listar(jList, file, "ListarTodos");
         jTextArea1.setText("");
     }//GEN-LAST:event_btnBuscarActionPerformed
 
@@ -242,7 +271,7 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         String file = JOptionPane.showInputDialog(this, "Ingrese el nombre del nuevo directorio/archivo: ", this.seleccionarArchivo());
-        if(controladorFile.crearFileCarpeta(file)){
+        if(controladorFile.crearFile(file)){
             JOptionPane.showMessageDialog(this, file + " creado con exito");
         }else{
             JOptionPane.showMessageDialog(this,"Directorio " + file + " no se creo");
@@ -250,13 +279,41 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        String file = JOptionPane.showInputDialog(this, "Ingrese el nombre del nuevo archivo: ", jList.getSelectedValue());
-        if(controladorFile.crearFileArchivo(file, file)){
+        String file = JOptionPane.showInputDialog(this, "Ingrese el nombre del nuevo archivo: ", this.seleccionarArchivo());
+        if(controladorFile.crearFile(file)){
             JOptionPane.showMessageDialog(this, file + " creado con exito");
         }else{
             JOptionPane.showMessageDialog(this,"Directorio " + file + " no se creo");
         }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void btbListarDirectoriosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbListarDirectoriosActionPerformed
+        String rutaFlle = txtFile.getText();
+        File file = new File(rutaFlle);
+        controladorFile.listar(jList, file, "ListarNormalesDirectorio");
+        jTextArea1.setText("");
+    }//GEN-LAST:event_btbListarDirectoriosActionPerformed
+
+    private void btbListarArchivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbListarArchivosActionPerformed
+        String rutaFlle = txtFile.getText();
+        File file = new File(rutaFlle);
+        controladorFile.listar(jList, file, "ListarNormalesYArchivos");
+        jTextArea1.setText("");
+    }//GEN-LAST:event_btbListarArchivosActionPerformed
+
+    private void btbListarArchivosOcultosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbListarArchivosOcultosActionPerformed
+        String rutaFlle = txtFile.getText();
+        File file = new File(rutaFlle);
+        controladorFile.listar(jList, file, "ListarOcultosYArchivos");
+        jTextArea1.setText("");
+    }//GEN-LAST:event_btbListarArchivosOcultosActionPerformed
+
+    private void btbListarDirectorioOcultosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbListarDirectorioOcultosActionPerformed
+        String rutaFlle = txtFile.getText();
+        File file = new File(rutaFlle);
+        controladorFile.listar(jList, file, "ListarOcultosYDirectorio");
+        jTextArea1.setText("");
+    }//GEN-LAST:event_btbListarDirectorioOcultosActionPerformed
 
     private String seleccionarArchivo(){
         if(jList.getSelectedValue() != null){
@@ -265,6 +322,7 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
             return txtFile.getText();
         }return "C:/";
     }
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -298,6 +356,7 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btbListarArchivos;
     private javax.swing.JButton btbListarArchivosOcultos;
     private javax.swing.JButton btbListarDirectorioOcultos;
     private javax.swing.JButton btbListarDirectorios;
