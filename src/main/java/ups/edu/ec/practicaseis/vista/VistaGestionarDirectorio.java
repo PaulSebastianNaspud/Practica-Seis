@@ -41,6 +41,7 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         btnBuscar = new javax.swing.JButton();
         btbListarArchivos = new javax.swing.JButton();
+        btnVolver = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
@@ -140,6 +141,15 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
             }
         });
 
+        btnVolver.setBackground(new java.awt.Color(204, 204, 204));
+        btnVolver.setForeground(new java.awt.Color(0, 0, 0));
+        btnVolver.setText("Volver");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -164,12 +174,14 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
                         .addComponent(btbListarDirectorioOcultos))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(44, 44, 44)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 934, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnVolver)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnMostrarInformarcion))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 934, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(840, 840, 840)
-                        .addComponent(btnMostrarInformarcion)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(33, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -194,8 +206,10 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(btnMostrarInformarcion)
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnMostrarInformarcion)
+                    .addComponent(btnVolver))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         jMenuBar1.setBackground(new java.awt.Color(204, 204, 204));
@@ -232,6 +246,11 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
 
         jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/nombre.png"))); // NOI18N
         jMenuItem1.setText("Renombrar");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem1);
         jMenu1.add(jSeparator2);
 
@@ -282,20 +301,23 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMostrarInformarcionActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        String file = JOptionPane.showInputDialog(this, "Ingrese el nombre del nuevo directorio/archivo: ", this.seleccionarArchivo());
-        if(controladorFile.crearFile(file)){
-            JOptionPane.showMessageDialog(this, file + " creado con exito");
+        String nuevoNombre = JOptionPane.showInputDialog(this, "Ingrese el nombre del nuevo directorio/archivo: ");
+        if(controladorFile.crearDirectorio(this.seleccionarArchivo()+"\\"+ nuevoNombre)){
+            JOptionPane.showMessageDialog(this, nuevoNombre + " creado con exito");
+            controladorFile.listar(jList, new File(txtFile.getText()), "ListarTodos");
         }else{
-            JOptionPane.showMessageDialog(this,"Directorio " + file + " no se creo");
+            JOptionPane.showMessageDialog(this,"Directorio " + nuevoNombre + " no se creo");
         }
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        String file = JOptionPane.showInputDialog(this, "Ingrese el nombre del nuevo archivo: ", this.seleccionarArchivo());
-        if(controladorFile.crearFile(file)){
-            JOptionPane.showMessageDialog(this, file + " creado con exito");
+        String nombre = JOptionPane.showInputDialog(this, "Ingrese el nombre del nuevo archivo: ");
+        if(controladorFile.crearArchivo(this.seleccionarArchivo()+"\\", nombre )){
+            JOptionPane.showMessageDialog(this, nombre + " creado con exito");
+            controladorFile.listar(jList, new File(txtFile.getText()), "ListarTodos");
+
         }else{
-            JOptionPane.showMessageDialog(this,"Directorio " + file + " no se creo");
+            JOptionPane.showMessageDialog(this,"Directorio " + nombre + " no se creo");
         }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
@@ -335,6 +357,7 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
             if (respuesta == JOptionPane.YES_OPTION) {
                 if (controladorFile.elminarFile(fileEliminar)) {
                     JOptionPane.showMessageDialog(this, "El directorio/archivo: " + fileEliminar.getName() + " a sido eliminado");
+                    controladorFile.listar(jList, new File(txtFile.getText()), "ListarTodos");
                 }
             }else {
                     JOptionPane.showMessageDialog(this, "El directorio/archivo: " + fileEliminar.getName() + "  no se a sido eliminado");
@@ -349,6 +372,23 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
         String file = jList.getSelectedValue();
         controladorFile.mostrar(jTextArea1, file);
     }//GEN-LAST:event_jListValueChanged
+
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        
+    }//GEN-LAST:event_btnVolverActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        String fileName = JOptionPane.showInputDialog(this, "Ingrese el nombre del directorio/archivo a renombrar del directorio/archivo: ");
+        File file = new File(this.seleccionarArchivo());
+        if(file!= null){
+            if(controladorFile.renombarArchivo(file, "\\"+fileName)){
+                JOptionPane.showMessageDialog(this, "El archivo/directorio se renombro a " + fileName);
+                controladorFile.listar(jList, new File(txtFile.getText()), "ListarTodos");
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "No se ha sellecionado un archivo/directorio");
+        }
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private String seleccionarArchivo(){
         if(jList.getSelectedValue() != null){
@@ -397,6 +437,7 @@ public class VistaGestionarDirectorio extends javax.swing.JFrame {
     private javax.swing.JButton btbListarDirectorios;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnMostrarInformarcion;
+    private javax.swing.JButton btnVolver;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList<String> jList;
     private javax.swing.JMenu jMenu1;

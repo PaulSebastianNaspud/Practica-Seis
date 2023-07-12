@@ -1,6 +1,7 @@
 package ups.edu.ec.practicaseis.controlador;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -15,24 +16,54 @@ import javax.swing.JTextArea;
  */
 public class ControladorFile {
 
-    public boolean crearFile(String filePath) {
+    public boolean crearFile(String filePath, String nuevoNombre) {
         if (filePath != null) {
-            File file = new File(filePath);
+            File file = new File(filePath + nuevoNombre);
             if (!file.exists()) {
-                if (file.isDirectory()) {
-                    file.mkdir();
-                } else {
+                try {
+                    if (!file.isDirectory()) {
+                        return file.mkdir();
+                    } else {
+                        File fileDirectorio = new File(file.getParent());
+                        if (!fileDirectorio.exists()) {
+                            fileDirectorio.mkdir();
+                        }
+                        return file.createNewFile();
+                    }
+                } catch (IOException iOException) {}
+            }
+        }
+        return false;
+    }
+    
+     public boolean crearDirectorio(String directorioPath) {
+        if (directorioPath != null) {
+            File directorio = new File(directorioPath);
+            if (!directorio.exists()) {
+                return directorio.mkdirs();
+            }
+        }
+        return false;
+    }
+
+    public boolean crearArchivo(String filePath, String nuevoNombre) {
+        if (filePath != null) {
+            File file = new File(filePath + nuevoNombre);
+            if (!file.exists()) {
+                try {
                     File fileDirectorio = new File(file.getParent());
                     if (!fileDirectorio.exists()) {
-                        fileDirectorio.mkdir();
-                    } return file.mkdir();
-                }
+                        fileDirectorio.mkdirs();
+                    }
+                    return file.createNewFile();
+                } catch (IOException e) {}
             }
-        } return false;
+        }
+        return false;
     }
     
     public boolean renombarArchivo(File file, String nuevoNombre) {
-        if (file.exists() && file != null) {
+        if (file.exists()) {
             File fileRenombreado = new File(file.getParent() + nuevoNombre);
             return file.renameTo(fileRenombreado);
         } return false;
